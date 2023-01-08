@@ -1,4 +1,4 @@
-%** Combined BFSK and BPSK Modulation                 **%
+%** Combining 2 antennas, BFSK and BPSK**%
 
 clear;
 format long;
@@ -11,11 +11,6 @@ s1 = [1, 0];                               %  0           0         %
 s2 = [0, 1];                               %  0           1         %
 s3 = [-1, 0];                              %  1           0         %  
 s4 = [0, -1];                              %  1           1         %
-
-s5 = [1, 0];                               %  0           0        1 %
-s6 = [0, 1];                               %  0           1        1 %
-s7 = [-1, 0];                              %  1           0        1 %  
-s8 = [0, -1];                              %  1           1        1 %
     
 for l=1:11
     np = 1.0*(l-1);                        %** Eb/N0 in dB
@@ -81,7 +76,7 @@ for l=1:11
 end
 
 % semilogy(snr,ber,'bo-',snr,b_BFSK)
-semilogy(snr,ber,'bo-', snr, b_BFSK)
+semilogy(snr,ber,'bo-', snr, b_BFSK, snr, b_BPSK)
 grid
 xlabel('SNR, in dB')
 ylabel('BER')
