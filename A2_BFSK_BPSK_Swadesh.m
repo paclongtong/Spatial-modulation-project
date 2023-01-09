@@ -12,17 +12,16 @@ s2 = [0, 1];                               %  0           1         %
 s3 = [-1, 0];                              %  1           0         %  
 s4 = [0, -1];                              %  1           1         %
     
-for l=1:16
-%     np = 1.0*(l-1);                        %** Eb/N0 in dB
-%     a = (0.5/nbits)*10^(-np/10);           %** Noise variance in linear                  **%
-    
-    np = 2.5*(l-1);                               %** E_b/N_0 in dB = 10*log10(snr)  **%
-    a = (0.5/2)*10^(-np/10);                      %** Variance of the thermal noise  N0/2 = 0.5(N0/Es) = 0.5(N0/Eb)/2 **%
-    es = 0;
+%* for l=1:11
+for l=1:17
+%    np = 1.0*(l-1);                        %** Eb/N0 in dB
+%    a = (0.5/nbits)*10^(-np/10);           %** Noise variance in linear                  **%
+     np = 2.5*(l-1); 
+     a = (0.5/2)*10^(-np/10); 
 %     a=0;
 %     h = crand(2,1);                        %** Fading channel (assumed Rayleigh fading)  **%
 %     h = ones(2,1);                         %** Ideal channel  (AWGN only)                **%
-%     es = 0;
+    es = 0;
     for k=1:1:N
       x=round(1*rand(1,3));                %** Input bits (3 bits per symbol)            **%
       h = crandn(2,1);
@@ -69,19 +68,21 @@ for l=1:16
     
 %     ber = zeros(1,1000000);
 %     snr = zeros(1,1000000);
-    ber(l) = es/(3*N);                                                %** Calculating the average bit error probability  **%
+    ber(l) = es/(2*N);                                                %** Calculating the average bit error probability  **%
     snr(l) = np;
     es = 0;
     srt = 10^(np/10);
      b_BFSK(l) = 0.5*erfc(sqrt(srt/2));
      b_BPSK(l) = 0.5*erfc(sqrt(srt));
     
-%     N = 200/ber(l);                                                   %** Number of transmitted symbols (updated)  **%
+    N = 200/ber(l);                                                   %** Number of transmitted symbols (updated)  **%
 end
 
 % semilogy(snr,ber,'bo-',snr,b_BFSK)
 semilogy(snr,ber,'bo-', snr, b_BFSK, snr, b_BPSK)
 grid
 xlabel('SNR, in dB')
+%**xlabel('$$E_b/N_0$$, in dB')
 ylabel('BER')
+%axis([0 12 1e-10 1])
 axis([0 40 1e-6 1])
