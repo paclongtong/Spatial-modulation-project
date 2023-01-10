@@ -1,7 +1,7 @@
 %** Combining 4 antennas, BFSK and BPSK**%
 clear;
 format long;
-N = 8000;                                  %** Number of Transmitted symbols   **%
+N = 800;                                  %** Number of Transmitted symbols   **%
 M = 16;
 
 met = zeros(1,16);
@@ -17,15 +17,37 @@ for l=1:17
 %     a = (0.5/nbits)*10^(-np/10);           %** Noise variance in linear                  **%
     
     np = 2.5*(l-1);                               %** E_b/N_0 in dB = 10*log10(snr)  **%
-    a = (0.5/4)*10^(-np/10);                      %** Variance of the thermal noise  N0/2 = 0.5(N0/Es) = 0.5(N0/Eb)/2 **%
+    a = (0.5/nbits)*10^(-np/10);                      %** Variance of the thermal noise  N0/2 = 0.5(N0/Es) = 0.5(N0/Eb)/2 **%
+%     a=0
     es = 0;
 %     a=0;
 %     h = crand(2,1);                        %** Fading channel (assumed Rayleigh fading)  **%
 %     h = ones(2,1);                         %** Ideal channel  (AWGN only)                **%
 %     es = 0;
+h = crandn(2,1);theta = angle(h);
+      h(2) = h(2)*exp(i*(theta(1)-theta(2)+pi/2));
     for k=1:1:N
       x=round(1*rand(1,3));                %** Input bits (3 bits per symbol)            **%
-      h = crandn(2,1);
+      
+%       
+%                   hold on 
+%  quiver(0,0,real(h(1)),imag(h(1)));
+%  quiver(0,0,real(h(2)),imag(h(2)));
+%  text(real(h(1)),imag(h(1)),'h(1)');text(real(h(2)),imag(h(2)),'h(2)');
+%  axis([-1,1,-1,1])
+%  grid on
+
+      
+
+%             hold on 
+%  quiver(0,0,real(h(1)),imag(h(1)));
+%  quiver(0,0,real(h(2)),imag(h(2)));
+%  text(real(h(1)),imag(h(1)),'h(1)');text(real(h(2)),imag(h(2)),'h(2)');
+%  axis([-1,1,-1,1])
+%  grid on
+ 
+%       axis([-2,2,-2,2]);
+%       plot(real(h(1)),imag(h(1)),'g*',real(h(2)),imag(h(2)),'bo');
       if (x(3)==0)
           if (x(1) == 0 && x(2) == 0)   
               rd1 = h(1)*s1 + sqrt(a)*crandn(1,2);  %** received signal point for 00              **%
@@ -86,16 +108,46 @@ for l=1:17
 %     a = (0.5/nbits)*10^(-np/10);           %** Noise variance in linear                  **%
         np = 2.5*(l-1); 
      a = (0.5/nbits)*10^(-np/10); 
+%      a=0;
 %     a=0;
 %     h = crand(2,1);                        %** Fading channel (assumed Rayleigh fading)  **%
 %     h = ones(2,1);                         %** Ideal channel  (AWGN only)                **%
 %     h = crandn(4,1);
     es = 0;
-    
-    
+    h = crandn(4,1);
+    theta = angle(h);
+      h(2) = h(2)*exp(i*(theta(1)-theta(2)+pi/4));
+      h(3) = h(3)*exp(i*(theta(1)-theta(3)+pi/2));
+      h(4) = h(4)*exp(i*(theta(1)-theta(4)-pi/4));
     for k=1:1:N
       x=round(1*rand(1,4));                %** Input bits (3 bits per symbol)            **%
-      h = crandn(4,1);
+      
+      %%%%%%%%%%%%
+%             hold on 
+%  quiver(0,0,real(h(1)),imag(h(1)));
+%  quiver(0,0,real(h(2)),imag(h(2)));
+%  quiver(0,0,real(h(3)),imag(h(3)));
+%  quiver(0,0,real(h(4)),imag(h(4)));
+%  text(real(h(1)),imag(h(1)),'h(1)');text(real(h(2)),imag(h(2)),'h(2)');
+%  text(real(h(3)),imag(h(3)),'h(3)');text(real(h(4)),imag(h(4)),'h(4)');
+%  axis([-1,1,-1,1])
+%  grid on
+
+      
+      
+%       axis([-2,2,-2,2]);
+%       plot(real(h(1)),imag(h(1)),'g*',real(h(2)),imag(h(2)),'bo',real(h(3)),imag(h(3)),'rd',real(h(4)),imag(h(4)),'bo');
+      
+%       hold on 
+%  quiver(0,0,real(h(1)),imag(h(1)));
+%  quiver(0,0,real(h(2)),imag(h(2)));
+%  quiver(0,0,real(h(3)),imag(h(3)));
+%  quiver(0,0,real(h(4)),imag(h(4)));
+%  text(real(h(1)),imag(h(1)),'h(1)');text(real(h(2)),imag(h(2)),'h(2)');
+%  text(real(h(3)),imag(h(3)),'h(3)');text(real(h(4)),imag(h(4)),'h(4)');
+%  axis([-1,1,-1,1])
+%  grid on
+      
       if (x(3)==0 && x(4)==0)
           if (x(1) == 0 && x(2) == 0)   
               rd1 = h(1)*s1 + sqrt(a)*crandn(1,2);  %** received signal point for 0000  **%
@@ -174,8 +226,8 @@ for l=1:17
     snr(l) = np;
     es = 0;
     srt = 10^(np/10);
-     b_BFSK(l) = 0.5*erfc(sqrt(srt/2));
-     b_BPSK(l) = 0.5*erfc(sqrt(srt));
+%      b_BFSK(l) = 0.5*erfc(sqrt(srt/2));
+%      b_BPSK(l) = 0.5*erfc(sqrt(srt));
     
     N = 200/ber(l);                                                   %** Number of transmitted symbols (updated)  **%
 end
@@ -185,13 +237,16 @@ out_bit = zeros(2);
 for l=1:17
 %     np = 1.0*(l-1);                        %** Eb/N0 in dB
 %     a = (0.5/nbits)*10^(-np/10);           %** Noise variance in linear                  **%
-            np = 2.5*(l-1); 
+     np = 2.5*(l-1); 
      a = (0.5/2)*10^(-np/10); 
+%      a=0;
 %     h = crand(2,1);                        %** Fading channel (assumed Rayleigh fading)  **%
 %     h = ones(2,1);                         %** Ideal channel  (AWGN only)                **%
     es = 0;
+    h = crand(2,1);
+    
     for k=1:1:N
-        h = crand(2,1);
+        
       x=round(1*rand(1,2));                %** Input bits (2 bits per symbol)            **%
 	  if (x(1) == 0 && x(2) == 0)   
           rd1 = s1 + sqrt(a)*crandn(1,1);  %** received signal point for 00              **%
@@ -219,8 +274,8 @@ for l=1:17
     snr(l) = np;
     es = 0;
     srt = 10^(np/10);
-    b_BFSK(l) = 0.5*erfc(sqrt(srt/2));
-    b_BPSK(l) = 0.5*erfc(sqrt(srt));
+    b_BFSK(l) = 0.5*erfc(sqrt(srt/2))+0.5*(1-sqrt(np/(2+np)));
+    b_BPSK(l) = 0.5*erfc(sqrt(srt))+0.5*(1-sqrt(np/(1+np)));
     
     N = 200/ber1(l);                                                   %** Number of transmitted symbols (updated)  **%
 end
@@ -232,4 +287,5 @@ legend('BPSK and BFSK','2-antenna SM','4-antenna SM', 'BFSK','BPSK');
 grid
 xlabel('SNR, in dB')
 ylabel('BER')
-axis([0 25 1e-6 1])
+title('Spatial modulation with calibrated antenna model')
+axis([0 40 1e-3 1])
